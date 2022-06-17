@@ -1,0 +1,13 @@
+List of Programs
+
+01_Test_Motor_Rotation    Run left and right motor forward and backward.
+02_Test_Motor_Speed       Run left and right motor from slow to fast.
+03_Test_Servo_Center      Move servomotor to center position.
+04_Test_Servo_Sweep       Move servomotor back and forth.
+05_Test_Sensor_Distance   Show distances from Ping ultrasonic rangefinder.
+06_Object_Avoidance       Robot roams and avoids objects using Ping rangefinder.
+07_Object_Following       Robot follows objects using Ping rangefinder.
+
+Makey Robot, MAKE Magazine, Volume 19, p. 77
+Created: June 2009 Kris Magri
+
