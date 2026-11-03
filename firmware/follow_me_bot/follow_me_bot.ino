@@ -73,62 +73,27 @@ void loop(){
     analogWrite(right_motor_speed,0);
     heat_direction = heat_search();
     if (heat_direction == 1) {
-       turn_left(200);
-       delay(300);
-       temp = temp_read();
-       if (temp >= 75){
-        go_forward();
-        do {
-          distance = distance_read();
-          temp = temp_read();
-          delay(25);
-        } while (distance >= 45 and temp >= 75);
-        
-        if (distance < 45) {
-          analogWrite(left_motor_speed,0);
-          analogWrite(right_motor_speed,0);
-          do {
-            //Serial.println("See human left");
-            distance = distance_read();
-            delay(25);
-          } while (distance < 45);
-        }
-      }
+      turn_left(200);
+      delay(300);
     } else if (heat_direction == 2) {
-       turn_right(300);
-       delay(300);
-       temp = temp_read();
-       if (temp >= 75){
+      turn_right(300);
+      delay(300);
+    }
+
+    if (heat_direction >= 1 and heat_direction <= 3) {
+      temp = temp_read();
+      if (temp >= 75) {
         go_forward();
         do {
           distance = distance_read();
           temp = temp_read();
           delay(25);
         } while (distance >= 45 and temp >= 75);
+
         if (distance < 45) {
           analogWrite(left_motor_speed,0);
           analogWrite(right_motor_speed,0);
           do {
-            //Serial.println("See human right");
-            distance = distance_read();
-            delay(25);
-          } while (distance < 45);
-        }
-      }
-    } else if (heat_direction == 3) {
-       temp = temp_read();
-       if(temp >= 75){
-        go_forward();
-        do {
-          distance = distance_read();
-          temp = temp_read();
-          delay(25);
-        } while (distance >= 45 and temp >= 75);
-        if (distance < 45) {
-          analogWrite(left_motor_speed,0);
-          analogWrite(right_motor_speed,0);
-          do {
-            //Serial.println("See human center");
             distance = distance_read();
             delay(25);
           } while (distance < 45);
