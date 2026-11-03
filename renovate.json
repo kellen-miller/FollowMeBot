@@ -15,19 +15,6 @@
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
       "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^\\.github/workflows/ci\\.yml$/"
-      ],
-      "matchStrings": [
-        "# renovate: depName=arduino/arduino-cli\\s+version: (?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "arduino/arduino-cli",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "versioningTemplate": "semver"
     }
   ]
 }
