@@ -1,4 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>kellen-miller/.github:renovate-config"]
+  "extends": [
+    "local>kellen-miller/.github:renovate-config"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^(?:firmware|diagnostics|examples)/[^/]+/sketch\\.yaml$/"
+      ],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>[^\\s]+)\\s+- (?:platform: )?[^\\r\\n(]+\\((?<currentValue>[^)]+)\\)"
+      ],
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioningTemplate": "semver"
+    }
+  ]
 }

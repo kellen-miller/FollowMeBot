@@ -27,6 +27,43 @@ variant lives under `reference/legacy/`; it is not the baseline for future work.
 The diagnostics are historical experiments, not automated tests; `head_test`
 also drives the motors.
 
-See [organization and dependency recommendations](docs/project-organization.md)
-for the proposed build setup and next steps. Source and asset contents were
-preserved during reorganization. Compilation and operation remain unverified.
+## Build
+
+Install Arduino CLI **1.5.1**, then run:
+
+```sh
+arduino-cli compile --profile uno --warnings all firmware/follow_me_bot
+```
+
+Each active sketch has a `sketch.yaml` profile with exact core/library versions.
+The CLI downloads these automatically into its isolated dependency cache;
+there is no manual library installation or ZIP extraction step.
+Profiles use Arduino AVR Boards **1.8.8**, Servo **1.3.0** where needed, and
+SparkFun Qwiic IR Thermometer MLX90614 Arduino Library **1.1.5** where needed.
+`Wire` comes from the board core.
+
+The `uno` target follows source comments; the physical board and wiring still
+need confirmation. Compilation does not verify operation or fix existing
+sensor return-path and retry defects.
+
+## CI and updates
+
+GitHub Actions compiles firmware, diagnostics, and examples on PRs, pushes to
+`main`, and manual dispatch. It uses the same pinned profiles and CLI version.
+Historical sketches under `reference/` are excluded. Compiler warnings remain
+visible, including existing firmware and upstream core warnings.
+
+Renovate tracks the core and library pins through annotated profile entries,
+the CLI version through the workflow annotation, and GitHub Actions through
+its built-in manager. Core/library updates use upstream three-part version tags;
+confirm the proposed version is also available in Arduino's package/library
+index. CI must compile successfully before accepting an update.
+
+For another sketch, use its directory in the build command. For a new sketch,
+add a `sketch.yaml` with an `uno` profile and only the libraries it includes;
+CI discovers `.ino` files under the three active directories automatically.
+Arduino IDE remains useful for interactive editing, but use the CLI command
+for builds with the pinned profiles.
+
+See [organization notes](docs/project-organization.md) for remaining hardware
+and firmware work. No automated hardware tests or uploads run in CI.

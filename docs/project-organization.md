@@ -4,8 +4,9 @@
 
 This is a small Arduino project: eight standalone sketches, seven Robot Makey
 lesson files, fabrication PDFs, class documents, a parts spreadsheet, and a
-SparkFun library archive. There is no recorded board configuration or build
-command. Keep the structure small enough to browse without a framework.
+SparkFun library archive. Build configuration now lives in each active sketch's
+`sketch.yaml`; CI compiles those sketches for an Uno. Keep the structure small enough to browse without a
+framework.
 
 The initial cleanup separates firmware, diagnostics, examples, hardware, and
 historical references. All moved files retain their original contents and names.
@@ -17,19 +18,17 @@ also differ. Do not choose a baseline solely from the word “optimized.”
 
 ## Build and dependencies
 
-Use Arduino IDE for editing/uploading and Arduino CLI for repeatable builds.
-Record exact dependencies in each maintained sketch's `sketch.yaml` build
-profile. Profiles can specify the board FQBN, platform version, and library
-versions and build with isolated dependencies. See the official
-[sketch project file specification](https://docs.arduino.cc/arduino-cli/sketch-project-file/).
+Use Arduino CLI 1.5.1 with the checked-in `uno` build profiles. They pin Arduino
+AVR Boards 1.8.8, Servo 1.3.0 where included, and SparkFun Qwiic IR Thermometer
+MLX90614 Arduino Library 1.1.5 where included. `Wire` is supplied by the core.
+These versions compile all seven active sketches. The Uno is a compile target
+inferred from comments, pending physical hardware confirmation.
 
-| Dependency | Evidence | Proposed tracking |
-| --- | --- | --- |
-| Arduino board core | Arduino APIs; Uno mentioned in motor comments | Confirm board, then pin platform and FQBN in build profiles |
-| `Wire` | Included by both full programs and `temp_test` | Supplied by the selected board core |
-| `Servo` | Included by both full programs and `head_test` | Pin a verified compatible library version in those profiles |
-| SparkFun MLX90614 | `SparkFunMLX90614.h`, `IRTherm` | Pin a verified compatible version in full-program and temperature profiles |
-| Arduino CLI | Not currently configured or installed on this workstation | Pin the validated CLI version in CI and document local installation |
+Profiles download dependencies into an isolated cache; globally installed
+libraries do not override the selected versions. See the official
+[sketch project file specification](https://docs.arduino.cc/arduino-cli/sketch-project-file/).
+The workflow pins its action commits and CLI version, and builds the same profiles.
+See the [README](../README.md#build) for the local command and update process.
 
 The ZIP at `reference/vendor/SparkFun_MLX90614_Arduino_Library-master.zip`
 declares `SparkFun MLX90614` version `1.0.0`. Its ZIP comment identifies commit
@@ -39,17 +38,11 @@ a registry release with the same version has identical contents.
 The [upstream library](https://github.com/sparkfun/SparkFun_MLX90614_Arduino_Library)
 owns the implementation and release history.
 
-After confirming hardware, compile against the archived library as a baseline,
-then evaluate a released library version. Commit working profiles and document:
-
-```sh
-arduino-cli compile --profile <verified-profile> <sketch-directory>
-```
-
-This is a command template, not an executable project configuration yet.
-Avoid introducing PlatformIO alongside Arduino CLI at this stage; one dependency
-mechanism is enough for this project. Keep the existing Renovate configuration,
-but verify support for the chosen manifest before relying on automated updates.
+The archived ZIP is retained for provenance; active builds use the indexed
+1.1.5 release, which retains the header and API used by this firmware. Compile
+success does not establish hardware compatibility. Renovate checks upstream
+tags for profile pins; the workflow uses its built-in action manager plus an
+annotated CLI version. Check Arduino index availability when reviewing updates.
 
 ## Firmware ownership
 
@@ -75,9 +68,8 @@ Keep diagnostics independently runnable and label their hardware assumptions.
    its result. Check timeout and failed-sensor handling before hardware trials.
 4. Check servo timer compatibility with motor PWM pins 9/10 on the confirmed
    board, then validate each diagnostic and the maintained program.
-5. Pin the validated build profiles and add compile-only CI for maintained
-   sketches. Keep hardware checks separate; compilation cannot prove motion or
-   sensing works. Add behavior tests when control logic is changed.
+5. Keep hardware checks separate from compile CI; compilation cannot prove
+   motion or sensing works. Review build warnings and sensor failure handling.
 
 Retain the original parts spreadsheet. A normalized BOM can follow once someone
 checks it against the actual robot. Preserve attribution on kit material and

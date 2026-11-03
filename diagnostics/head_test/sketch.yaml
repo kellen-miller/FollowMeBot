@@ -1,0 +1,11 @@
+default_profile: uno
+profiles:
+  uno:
+    notes: Uno compile target inferred from source comments; hardware unverified.
+    fqbn: arduino:avr:uno
+    platforms:
+      # renovate: depName=arduino/ArduinoCore-avr
+      - platform: arduino:avr (1.8.8)
+    libraries:
+      # renovate: depName=arduino-libraries/Servo
+      - Servo (1.3.0)
