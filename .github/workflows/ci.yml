@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    name: Compile Arduino sketches
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02 # v2.0.0
+        with:
+          # renovate: depName=arduino/arduino-cli
+          version: 1.5.1
+      - name: Compile firmware, diagnostics, and examples
+        shell: bash
+        run: |
+          for sketch_file in firmware/*/*.ino diagnostics/*/*.ino examples/*/*.ino; do
+            sketch="${sketch_file%/*}"
+            echo "::group::Compile $sketch"
+            arduino-cli compile --profile uno --warnings all "$sketch"
+            echo "::endgroup::"
+          done
