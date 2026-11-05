@@ -1,4 +1,4 @@
-name: CI
+name: Arduino
 
 on:
   push:
@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: CI-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  compile:
-    name: Compile Arduino sketches
+  compile-sketches:
+    name: Arduino / Compile sketches
     runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
