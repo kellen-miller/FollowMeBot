@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   compile-sketches:
-    name: Arduino / Compile sketches
+    name: Compile sketches
     runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
